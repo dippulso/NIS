@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<script>
+    window.onload = function () {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("Retrieve")',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (r) {
+                console.log(r);
+                $.each(r, function (key, val) {
+                    $('#text').append('<li value="' + key + '">&nbsp;' + val + '</li>');
+                });
+            },
+            error: function () {
+                alert("Error while retrieving data");
+            }
+        });
+    }
+
+    function addText() {
+        var text = $("#toInsert").val();
+        console.log(text);
+        $.ajax({
+                type: "POST",
+                url: '@Url.Action("InsertText")',
+                data: '{text: ' + JSON.stringify(text) + '}',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (r) {
+                    if (r != 0) {
+                        window.location.reload();
+                    }
+                },
+                error: function () {
+                    alert("Error while inserting data");
+                }
+            });
+    }
+
+</script>
+
+<ul id="text" style="width: 750px; height: 500px;">
+    
+</ul>
+<div>
+    <input id="toInsert" autofocus/>
+    <button onclick="addText()" >Добавить</button>
+</div>
+
